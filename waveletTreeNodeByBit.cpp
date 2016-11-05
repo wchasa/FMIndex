@@ -64,7 +64,7 @@ CString waveletTreeNodeByBit::showNodeData()
 			str += "1"; AtlTrace("1");
 		
 	}
-	AtlTrace("header:");
+	str += "\nheader:";
 	for (i = 0; i < GamaData.gamaHeader.size(); i++)
 	{
 		switch (GamaData.gamaHeader[i])
@@ -116,5 +116,6 @@ CString waveletTreeNodeByBit::showNodeData()
 		str += strtemp;
 		//AtlTrace("%d,", GamaData.B[i]);
 	}
+	str += "\n";
 	return str;
 }

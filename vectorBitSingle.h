@@ -5,10 +5,10 @@
 #define SBSize 256
 
 
-const int BRunlength = ceil(log2(BSize));
-const int Bmask = (1 << BRunlength) - 1;
-const int SBRunlength = ceil(log2(SBSize));
-const int SBmask = (1 << SBRunlength) - 1;
+const int BRunlength  = log2(SBSize+1);
+const int Bmask		  = (1 << SBSize) - 1;
+//const int SBRunlength = log2(SBSize+1);
+//const int SBmask	  = (1 << SBRunlength) - 1;
 using namespace std;
 class vectorBitSingle
 {

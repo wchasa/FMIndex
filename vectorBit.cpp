@@ -42,6 +42,8 @@ int vectorBit::getCorrectLengthInput(int input)
 
 void vectorBit::push_back(UINT64 input)
 {
+	if (input == 128)
+		AtlTrace("123");
 	input = getCorrectLengthInput(input);
 	int currentPosInVectorByte = getLengthInBit() >> 3;
 	int currentPosInByte = getLengthInBit() & 0x7;

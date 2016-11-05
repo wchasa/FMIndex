@@ -147,7 +147,7 @@ int main()
 	//unsigned char* T = new unsigned char[21]{'a', 's', 'a', 'k', 'a', 'k', 'r', 'h', 'a', 'k', 'a', 'k', 'r', 'h', 'a', 'k', 'a', 's', 'a', 'k', '#'};
 	//int length  =21;
 
-	const char* strpath = "E:\\测试数据\\测试数据\\normal\\mybook1";
+	const char* strpath = "E:\\测试数据\\测试数据\\normal\\book1";
 	//TCHAR* strpath = _T("E:\\测试数据\\测试数据\\english");
 	errno_t err;
 	//	err = fopen_s(&fp, strpath, "r");
@@ -174,12 +174,18 @@ int main()
 		ipos = str.Find(strpatten, ipos + 1);
 	}
 	tree->proccessForCounstructWaveletTree(list, count);
-	waveletTreeNodeByBit* w = tree->getRoot()->r->l;
+	waveletTreeNodeByBit* w = tree->getRoot()->r;
 	CString str2 =w->showNodeData();
 	AtlTrace(str2);
-	int i1 =tree->RankOFGama('e', 122);
-	int i2 = tree->Rank('e', 122);
-	int i3 = BaisOperate::StupidRank(tree->getBWT(), count, 'e', 122);
+	int i1 =tree->RankOFGama('e', 209);
+	int i2 = tree->Rank('e', 209);
+//	int i3 = BaisOperate::StupidRank(tree->getBWT(), count, 'e', 209);
+//	int i4 =tree->rankOfCurrentGama(w->GamaData, 137);
+//	int i5 = BaisOperate::rank1(w->tData, 137);
+	vectorBit v;
+	v = vectorBit(8);
+	v.push_back(128);
+	AtlTrace("%d", v[0]);
 	for (int i = 0; i < count;i++)
 	{
 		if (tree->Rank('e', i) != tree->RankOFGama('e', i))

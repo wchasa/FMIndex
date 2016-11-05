@@ -183,7 +183,7 @@ tuple<int, int> waveletTreeByBit::count(string Patten/*, int* Ctable*/)
 }
 int waveletTreeByBit::Rank(const unsigned char c, const int& pos) const
 {
-	AtlTrace("Start Rank: now pos =%d\n", pos);
+	AtlTrace("Start Rank: now pos =%d,c=%c\n", pos,c);
 	waveletTreeNodeByBit* nodetemp = root;
 	if (!ContainChar(nodetemp->allist, c))
 		return -1;
@@ -244,10 +244,12 @@ int waveletTreeByBit::RankOFGama(const unsigned char c, const int& pos) const
 int waveletTreeByBit::rankOfCurrentGama(GamaCompressData& GamaData, const int& pos)
 {
 	//waveletTreeNodeByBit* nodetemp = root;
-
-	int offset = GamaData.SB[(pos + 1) / SBSize] + GamaData.B[(pos + 1) / BSize];
+	int sbindex = (pos + 1) / SBSize;
+	int bindex  = (pos + 1) / BSize;
+	int mod = (pos + 1) % BSize;//todo mod
+	int offset = GamaData.SB[sbindex] + GamaData.B[bindex];
 	int header = GamaData.gamaHeader[(pos + 1) / BSize];
-	int rankresult = GamaData.SBrank[(pos + 1) / SBSize] + GamaData.Brank[(pos + 1) / BSize] + lrank(GamaData.gamacode, offset, header, (pos + 1) & Bmask);
+	int rankresult = GamaData.SBrank[sbindex] + GamaData.Brank[bindex] + lrank(GamaData.gamacode, offset, header, mod);
 	return rankresult;
 }
 
@@ -265,7 +267,7 @@ int waveletTreeByBit::lrank(vectorBitSingle s, int offset, int headertype, int m
 	switch (headertype)
 	{
 	case GAMACode::Plain:
-		return BaisOperate::rank1(s, offset, offset + mount);
+		return BaisOperate::rank1(s, offset, mount);
 	case GAMACode::RLG0:
 	case GAMACode::RLG1:
 		bval = GAMACode::RLG0 == headertype ? false : true;

@@ -10,12 +10,15 @@ GamaCompressData::GamaCompressData()
 
 void GamaCompressData::Init(int bitLength)
 {
-	int SbitrunLength = log2(bitLength);
+
+	int SbitrunLength = log2((bitLength<<1)-1);
 	int BbitrunLength = BRunlength;
+//	SBmask =  (1 << SbitrunLength) - 1;
+	
 	SBrank = vectorBit(SbitrunLength);
 	SB = vectorBit(SbitrunLength);
-	B = vectorBit(SbitrunLength);
-	Brank = vectorBit(SbitrunLength);
+	B = vectorBit(BbitrunLength);
+	Brank = vectorBit(BbitrunLength);
 	SBrank.push_back(0);
 	Brank.push_back(0);
 	SB.push_back(0);
@@ -29,13 +32,13 @@ bool GamaCompressData::IsSuperBlock(int pos)
 	//	temp = pos&SBmask;
 	//else 
 	//	temp = pos%SBSize; 
-	int i = BaisOperate::assembly_popcnt(pos);
-	temp = pos & SBmask;
-	if (i == 1)
-		return temp;
+	//int i = BaisOperate::assembly_popcnt(pos);
+	
+	temp = pos % SBSize;
+	if (temp == 0)
+		return true;
 	else
-		temp = (pos % SBSize);
-	return temp;
+		return false;
 }
 
 void GamaCompressData::allocatMemeryForVectors(int i)
@@ -52,6 +55,8 @@ void GamaCompressData::allocatMemeryForVectors(int i)
 
 void GamaCompressData::CreateDate(vectorBitSingle& inarray)
 {
+	if (inarray.size() == 211)
+		AtlTrace("123");
 	Init(inarray.size());
 	allocatMemeryForVectors(inarray.size());
 	GAMACode gama;
@@ -97,7 +102,7 @@ void GamaCompressData::CreateDate(vectorBitSingle& inarray)
 		i += BSize;
 		//(pos + 1) & Bmask
 
-		if (IsSuperBlock(i) != 0)
+		if (!IsSuperBlock(i))
 		{
 			Brank.push_back(Brank_s - SBrank_s_pre);
 			B.push_back(B_s - SB_s_pre);

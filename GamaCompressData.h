@@ -14,9 +14,10 @@ public:
 	vectorBit		Brank;
 	vectorBit		SB;
 	vectorBit		B;
+	 int SBmask;
 	GamaCompressData();
 	void Init(int bitLength);
-	static bool IsSuperBlock(int pos);
+	bool IsSuperBlock(int pos);
 	void allocatMemeryForVectors(int i);
 	void CreateDate(vectorBitSingle& inarray);
 	void ResizeToRealsize();
