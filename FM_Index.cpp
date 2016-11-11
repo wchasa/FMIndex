@@ -6,8 +6,9 @@
 #include <time.h>
 #include <algorithm>  
 #include "Transform.h"
+#include <iostream>
 using namespace std;
-#define SIZE 1024*1024*1
+#define SIZE 1024*1024*50
 int main9()
 {
 	CString str;
@@ -27,19 +28,27 @@ int main9()
 }
 int _tmain(int argc, _TCHAR* argv[])
 {
-	time_t end , start;
+	time_t end, start;
 	double duration;
-	CString str;
+	//CString str;
+	char c;
 	waveletTreeByBit* tree = new waveletTreeByBit();
 	unsigned char* alphbetList = new unsigned char[256];
 	FILE* fp;
-	const char* strpath = "E:\\测试数据\\测试数据\\normal\\dna";
-   //const char* strpath = "J:\\测试数据\\small\\book1";
+	//const char* strpath = "E:\\测试数据\\测试数据\\normal\\dna";
+	//const char* strpath = "E:\\测试数据\\测试数据\\normal\\proteins";
+	//const char* strpath = "E:\\测试数据\\测试数据\\normal\\para";
+	//const char* strpath = "E:\\测试数据\\测试数据\\normal\\dblp.xml"; //特别快
+	//const char* strpath = "E:\\测试数据\\测试数据\\highly-repetive\\cere";
+	const char* strpath = "E:\\测试数据\\测试数据\\highly-repetive\\einstein.en.txt"; 
+	//const char* strpath = "J:\\测试数据\\small\\book1";
 	//const char* strpath = "J:\\测试数据\\normal\\dna";
 	errno_t err;
 	if (fopen_s(&fp, strpath, "r"))
 	{
+
 		printf("The file %s is not exist.", strpath);
+		cin >> ("%c", c);
 		return 0;
 	}
 	err = fseek(fp, 0L, SEEK_END);
@@ -47,27 +56,70 @@ int _tmain(int argc, _TCHAR* argv[])
 	fseek(fp, 0, SEEK_SET);
 	size = size < SIZE ? size : SIZE;
 	unsigned char* list = new unsigned char[size];
-	
+
 	long count = fread(list, sizeof(char), size, fp);
-	str = list;
-	auto strpatten = _T("AAA");
-	int ipos = str.Find(strpatten);
+	//str = list;
+	//auto strpatten = _T("AAA");
+	//int ipos = str.Find(strpatten);
 	vector<int> strvector;
-	printf("using string\n");
+
 	//while (ipos!=-1)
 	//{
 	//	printf("pos=%d,", ipos);
 	//	strvector.push_back(ipos);
 	//	ipos = str.Find(strpatten, ipos + 1);
 	//}
+	//CString strFilename = strpath;
+
+	printf("File Name: %s\nbefore compress size :%5fKB\n", strpath, static_cast<double>(count / 1024));
+
 	start = clock();
 	tree->proccessForCounstructWaveletTree(list, count);
 	end = clock();
+
 	duration = static_cast<double>(end - start) / CLOCKS_PER_SEC;
-	printf("durationOF constructC %f\n", duration);
+	printf("durationOF constructwavelettree %fs\n", duration);
+	auto size1 = waveletTreeByBit::calculateGamaCodeSize(*tree->getRoot());
+	duration = static_cast<double>(size1) / count;
+	printf("after compress size:%5fKB,\ncompress rate: %f\n", static_cast<double>(size1) / 1024, duration);
 	int ii = 0;
 	int pos = 0;
-	tuple<int, int> postuple = tree->count("AAA");
+	start = clock();
+	for (ii = 0; ii < 1000; ii++)
+	{
+		tree->RankOFGama(list[ii], ii);
+	}
+	end = clock();
+	duration = static_cast<double>(end - start) / 1000;
+	printf("\ndurationOF Rank %fms\n", duration);
+
+	start = clock();
+	tuple<int, int> postuple = tree->count("the");
+	end = clock();
+	duration = static_cast<double>(end - start) ;
+	printf("\ndurationOF count %fms\n", duration);
+	
+	printf("search patten :AAA,", get<1>(postuple)-get<0>(postuple)+1);
+	
+	if (get<0>(postuple) != -1)
+	{
+		printf("the patten exist %d times", get<1>(postuple)-get<0>(postuple)+1);
+		//printf(", their position are as follows :");
+		start = clock();
+		auto i = tree->locate(postuple);
+		end = clock();
+		duration = static_cast<double>(end - start)  / (get<1>(postuple)-get<0>(postuple)+1);
+		printf("\ndurationOF locate %fms\n", duration);
+		//for (int i1 = 0; i1 < i.size(); i1++)
+		//{
+		//	printf("pos=%d,", i[i1]);
+		//	if (i1 % 10 == 0)
+		//		printf("\n");
+		//}
+	}
+	cout << "\end!";
+
+	//cin >> ("%c", c);
 	/*printf(" \n");
 	for (ii = 54; ii < count; ii++)
 	{
@@ -95,6 +147,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	//		if (i[i1] != strvector[i1])
 	//			printf("pos=%d,", i1);
 	//}
+	
 }
 int _tmain33(int argc, _TCHAR* argv[])
 {

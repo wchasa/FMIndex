@@ -45,6 +45,7 @@ void waveletTreeByBit::proccessForCounstructWaveletTree(unsigned char* inarray, 
 	LF = new unsigned int[length];
 	unsigned char* alphbetList = new unsigned char[256];
 	BWT = new unsigned char[length];
+	//printf()
 	auto posOfend = Transform::constructBWT(inarray, BWT, length,SA );
 	
 	int alCount = Transform::GetExistAlphabet(inarray, alphbetList, length);
