@@ -141,6 +141,7 @@ void Transform::computerLF(int* C, unsigned char* L, unsigned int* LF, int lengt
 	LF[0] = C[L[0]];
 	for (i = 1; i < length; i++)
 	{
+		ATLTRACE("i = %d,C[L[i]] = %d, BaisOperate::rank1(L[i], i)) = %d\n", i, C[L[i]], BaisOperate::rank1(L, i));
 		LF[i] = (C[L[i]] + BaisOperate::rank1(L, i)) % length;
 	}
 }

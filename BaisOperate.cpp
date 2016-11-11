@@ -67,12 +67,12 @@ int ::BaisOperate::rank1(vector<unsigned char> L, int size)
 	return icount;
 }
 
-int ::BaisOperate::rank1(unsigned char* L, int size)
+int ::BaisOperate::rank1(unsigned char* L, int pos)
 {
 	int icount = 0;
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < pos; i++)
 	{
-		if (L[i] == L[size])
+		if (L[i] == L[pos])
 			icount++;
 	}
 	return icount;

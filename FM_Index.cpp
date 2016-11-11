@@ -4,29 +4,41 @@
 #include "stdafx.h"
 #include <vector>
 #include <time.h>
+#include <algorithm>  
 #include "Transform.h"
 using namespace std;
 #define SIZE 1024
-/*
+int main9()
+{
+	CString str;
+	waveletTreeByBit* tree = new waveletTreeByBit();
+	unsigned char* alphbetList = new unsigned char[256];
+	unsigned char* T = new unsigned char[21]{'a', 's', 'a', 'k', 'a', 'k', 'r', 'h', 'a', 'k', 'a', 'k', 'r', 'h', 'a', 'k', 'a', 's', 'a', 'k', '#'};
+	int length = 21;
+	int ii = 0;
+	tree->proccessForCounstructWaveletTree(T, length);
+	for (ii = 2; ii < length; ii++)
+	{
+		if (tree->SA[ii] != tree->getpos2(ii))
+			printf("wrong pos=%d\n", ii);
+	}
+	return 0;
+}
 int _tmain(int argc, _TCHAR* argv[])
 {
 	CString str;
 	waveletTreeByBit* tree = new waveletTreeByBit();
 	unsigned char* alphbetList = new unsigned char[256];
 	FILE* fp;
-	//unsigned char* T = new unsigned char[21]{'a', 's', 'a', 'k', 'a', 'k', 'r', 'h', 'a', 'k', 'a', 'k', 'r', 'h', 'a', 'k', 'a', 's', 'a', 'k', '#'};
-	//int length  =21;
-
-	const char* strpath = "E:\\测试数据\\测试数据\\normal\\mybook1";
-	//TCHAR* strpath = _T("E:\\测试数据\\测试数据\\english");
+	//const char* strpath = "E:\\测试数据\\测试数据\\normal\\mybook1";
+   //const char* strpath = "J:\\测试数据\\small\\book1";
+	const char* strpath = "J:\\测试数据\\normal\\dna";
 	errno_t err;
-//	err = fopen_s(&fp, strpath, "r");
 	if (fopen_s(&fp, strpath, "r"))
 	{
 		printf("The file %s is not exist.", strpath);
 		return 0;
 	}
-	// ReSharper disable once CppEntityNeverUsed
 	err = fseek(fp, 0L, SEEK_END);
 	long size = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
@@ -35,24 +47,46 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	long count = fread(list, sizeof(char), size, fp);
 	str = list;
-	auto strpatten = _T("the");
+	auto strpatten = _T("AA");
 	int ipos = str.Find(strpatten);
+	vector<int> strvector;
 	printf("using string\n");
 	while (ipos!=-1)
 	{
 		printf("pos=%d,", ipos);
+		strvector.push_back(ipos);
 		ipos = str.Find(strpatten, ipos + 1);
 	}
 	tree->proccessForCounstructWaveletTree(list, count);
-	tuple<int, int> postuple = tree->count("the");
+	int ii = 0;
+	int pos = 0;
+	tuple<int, int> postuple = tree->count("AA");
+	printf(" \n");
+	for (ii = 54; ii < count; ii++)
+	{
+		if (tree->SA[ii]!=tree->getpos2(ii))
+			printf("wrong pos=%d\n", ii);
+	}
+	printf(" \n");
+	//for (int i2 = 0; i2 < 100; i2++)
+	//{
+	//	printf("i=%d,sa = %d,LF=%d", i2, tree->SA[i2], tree->LF[i2]);
+	//	for (int tt = 0; tt < 10; tt++)
+	//		printf(" %c", list[(tree->SA[i2] + tt) % count]);
+	//	printf(" \n");
+	//}
+	//auto iii = tree->getpos2(2);
 	if (get<0>(postuple) != -1)
 	{
 		auto i = tree->locate(postuple);
 		//printf("bug = %c", get<0>(postuple), get<1>(postuple));
 		printf("\nl=%d,r=%d\n", get<0>(postuple), get<1>(postuple));
+		sort(i.begin(), i.end());
 		printf("using wavelet\n");
 		for (int i1 = 0; i1 < i.size(); i1++)
 			printf("pos=%d,", i[i1]);
+			/*if (i[i1] != strvector[i1])
+				printf("pos=%d,", i1);*/
 	}
 }
 int _tmain33(int argc, _TCHAR* argv[])
@@ -136,18 +170,18 @@ int _tmain33(int argc, _TCHAR* argv[])
 	printf("new size is  %d\n,old is %d\n,%f\n", size1, length, per);
 	return 0;
 }
-*/
 
-int main()
+
+int main11()
 {
 	CString str;
 	waveletTreeByBit* tree = new waveletTreeByBit();
 	unsigned char* alphbetList = new unsigned char[256];
 	FILE* fp;
-	//unsigned char* T = new unsigned char[21]{'a', 's', 'a', 'k', 'a', 'k', 'r', 'h', 'a', 'k', 'a', 'k', 'r', 'h', 'a', 'k', 'a', 's', 'a', 'k', '#'};
-	//int length  =21;
+//	unsigned char* T = new unsigned char[21]{'a', 's', 'a', 'k', 'a', 'k', 'r', 'h', 'a', 'k', 'a', 'k', 'r', 'h', 'a', 'k', 'a', 's', 'a', 'k', '#'};
+//	int length  =21;
 
-	const char* strpath = "E:\\测试数据\\测试数据\\normal\\book1";
+	const char* strpath = "J:\\测试数据\\small\\book1";
 	//TCHAR* strpath = _T("E:\\测试数据\\测试数据\\english");
 	errno_t err;
 	//	err = fopen_s(&fp, strpath, "r");
@@ -168,28 +202,26 @@ int main()
 	auto strpatten = _T("the");
 	int ipos = str.Find(strpatten);
 	printf("using string\n");
+	vector<int> strvector,waveletvector;
 	while (ipos != -1)
 	{
 		printf("pos=%d,", ipos);
+		strvector.push_back(ipos);
 		ipos = str.Find(strpatten, ipos + 1);
 	}
 	tree->proccessForCounstructWaveletTree(list, count);
+	for (int ii = 0; ii < count; ii++)
+		if (tree->BWT[ii] != list[tree->SA[tree->LF[ii]]])
+			AtlTrace("Wrong pos %d\n",ii);
 	waveletTreeNodeByBit* w = tree->getRoot()->r;
 	CString str2 =w->showNodeData();
 	AtlTrace(str2);
 	int i1 =tree->RankOFGama('e', 209);
 	int i2 = tree->Rank('e', 209);
+//	int i3 = Transform::computerLF(tree->BWT,)
 //	int i3 = BaisOperate::StupidRank(tree->getBWT(), count, 'e', 209);
 //	int i4 =tree->rankOfCurrentGama(w->GamaData, 137);
 //	int i5 = BaisOperate::rank1(w->tData, 137);
-	vectorBit v;
-	v = vectorBit(8);
-	v.push_back(128);
-	AtlTrace("%d", v[0]);
-	for (int i = 0; i < count;i++)
-	{
-		if (tree->Rank('e', i) != tree->RankOFGama('e', i))
-			printf("pos=%d,", i);
-	}
+
 	
 }

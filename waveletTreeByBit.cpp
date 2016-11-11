@@ -22,9 +22,15 @@ void waveletTreeByBit::computerLF(int* C, unsigned char* L, unsigned* LF, int le
 {
 	int i;
 	LF[0] = C[L[0]];
-	for (i = 1; i < length; i++)
+//	int start = RA[0];
+
+//	LF[start] = 0;
+	for (i = 0; i < length; i++)
 	{
-		LF[i] = (C[L[i]] + RankOFGama(L[i], i)) % length;
+		int temp = (i - 1>=0) ? (i - 1) : (i + 1024 - 1);
+		LF[RA[i]] = RA[temp];
+		//ATLTRACE("i = %d,C[L[i]] = %d, Rank(L[i], i)) = %d\n",i, C[L[i]], Rank(L[i], i));
+		//LF[i] = (C[L[i]] + Rank(L[i], i-1)) % length;
 	}
 }
 
@@ -32,7 +38,8 @@ void waveletTreeByBit::proccessForCounstructWaveletTree(unsigned char* inarray, 
 {
 	//CTable[CSize];
 	Length = length;
-	int* SA = new int[length];
+	SA = new int[length];
+	RA = new int[length];
 	CTable = new int[CSize];
 	SASample = new unsigned int[length / SAMPLESTEP];
 	LF = new unsigned int[length];
@@ -43,16 +50,20 @@ void waveletTreeByBit::proccessForCounstructWaveletTree(unsigned char* inarray, 
 	int alCount = Transform::GetExistAlphabet(inarray, alphbetList, length);
 	Transform::quick_sort(alphbetList, 0, alCount - 1);
 	Transform::constructC(inarray, CTable, length);
-	Transform::computerLF(CTable, BWT, LF, length);
+	//Transform::computerLF(CTable, BWT, LF, length);
 	vector<unsigned char> alphbetVector(alphbetList, alphbetList + alCount);
 	vector<unsigned char> BWTvector(BWT, BWT + length);
 	this->CounstructWaveletTree(BWTvector, alphbetVector, *this->getRoot());
-//	computerLF(CTable, BWT, LF, length);
+	for (int i = 0; i < length; i++)
+	{
+		RA[SA[i]] = i;
+	}
+	computerLF(CTable, BWT, LF, length);
 	for (int i = 0; i < length / SAMPLESTEP; i++)
 	{
 		SASample[i] = SA[i*SAMPLESTEP];
 	}
-
+	
 
 }
 void waveletTreeByBit::CounstructWaveletTree(const vector<unsigned char> inarray, const vector<unsigned char> alphbetList, waveletTreeNodeByBit& wt) const
@@ -168,8 +179,8 @@ tuple<int, int> waveletTreeByBit::count(string Patten/*, int* Ctable*/)
 	{//todo need change
 		i--;
 		c = Patten[i];
-		//l = CTable[c] + RankOFGama(c, l - 1);
-		//r = CTable[c] + RankOFGama(c, r) - 1;
+		l = CTable[c] + RankOFGama(c, l - 1);
+		r = CTable[c] + RankOFGama(c, r) - 1;
 		//l = CTable[c] + Rank(c, l - 1);
 		//r = CTable[c] + Rank(c, r) - 1;
 	}
@@ -183,7 +194,7 @@ tuple<int, int> waveletTreeByBit::count(string Patten/*, int* Ctable*/)
 }
 int waveletTreeByBit::Rank(const unsigned char c, const int& pos) const
 {
-	AtlTrace("Start Rank: now pos =%d,c=%c\n", pos,c);
+	//AtlTrace("Start Rank: now pos =%d,c=%c\n", pos,c);
 	waveletTreeNodeByBit* nodetemp = root;
 	if (!ContainChar(nodetemp->allist, c))
 		return -1;
@@ -196,25 +207,25 @@ int waveletTreeByBit::Rank(const unsigned char c, const int& pos) const
 		if (nodetemp->allist[c] == 0)
 		{
 			ipos = ipos - BaisOperate::rank1(nodetemp->tData, ipos);//rank0
-			AtlTrace("lnode,:now pos =%d\n", ipos);
+		//	AtlTrace("lnode,:now pos =%d\n", ipos);
 			nodetemp = nodetemp->l;
 		}
 		else
 		{
 			ipos = BaisOperate::rank1(nodetemp->tData, ipos)-1;
-			AtlTrace("rnode,:now pos =%d\n", ipos);
+		//	AtlTrace("rnode,:now pos =%d\n", ipos);
 			nodetemp = nodetemp->r;
 			
 		}
 	}
 	int count = ipos + 1;
-	AtlTrace("End Rank,result = %d\n", count);
+	//AtlTrace("End Rank,result = %d\n", count);
 	return count;
 }
 
 int waveletTreeByBit::RankOFGama(const unsigned char c, const int& pos) const
 {
-	AtlTrace("Start RankOFGama:now pos =%d,c=%c\n ", pos,c);
+//	AtlTrace("Start RankOFGama:now pos =%d,c=%c\n ", pos,c);
 	waveletTreeNodeByBit* nodetemp = root;
 	if (!ContainChar(nodetemp->allist, c))
 		return -1;
@@ -225,18 +236,18 @@ int waveletTreeByBit::RankOFGama(const unsigned char c, const int& pos) const
 		if (nodetemp->allist[c] == 0) //c is 0
 		{
 			ipos = ipos - rankOfCurrentGama(nodetemp->GamaData, ipos);
-			AtlTrace("lnode,:now pos =%d\n", ipos);
+//			AtlTrace("lnode,:now pos =%d\n", ipos);
 			nodetemp = nodetemp->l;
 		}
 		else//c is 1
 		{
 			ipos = rankOfCurrentGama(nodetemp->GamaData, ipos )-1;
-			AtlTrace("rnode,:now pos =%d\n", ipos);
+//			AtlTrace("rnode,:now pos =%d\n", ipos);
 			nodetemp = nodetemp->r;
 		}
 	}
 	int count = ipos + 1;
-	AtlTrace("End RankOFGama,result = %d\n", count);
+//	AtlTrace("End RankOFGama,result = %d\n", count);
 	
 	return count;
 }
@@ -396,18 +407,23 @@ vector<unsigned int> waveletTreeByBit::locate(tuple<int, int> rangeLtoR)
 
 unsigned waveletTreeByBit::getpos2(int pos)
 {
+	int tep = pos;
+	//AtlTrace("SA[%d] = ", pos);
 	int step = 0;
 	int outpos = 0;
-	while ((pos % 4) !=0)
+	while ((pos % SAMPLESTEP) != 0)
 	{
-		AtlTrace("pos = %d", pos);
+		//if (step==4)
+		//	AtlTrace("SA[%d] = ", pos);
 		pos = LF[pos];
 		step++;
+		
 	}
 	pos = pos / SAMPLESTEP;
 	outpos = (SASample[pos] + step) % Length;
+	AtlTrace("SA[%d] = %d ,real = %d", tep, outpos, SA[tep] );
 	return outpos;
-
+	
 }
 
 waveletTreeByBit::waveletTreeByBit()

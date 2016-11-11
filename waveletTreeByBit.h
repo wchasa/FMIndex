@@ -11,12 +11,14 @@
 using namespace std;
 class waveletTreeByBit
 {
-private:
+public:
 	waveletTreeNodeByBit* root;
 	unsigned int* SASample;
 	unsigned int* LF;
 	int* CTable;
 	int Length;
+	int* SA;
+	int* RA;
 	unsigned char* BWT;
 public:
 
