@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="头文件\1">
+      <UniqueIdentifier>{be397b42-205b-489d-a25a-25105dc275d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\c">
+      <UniqueIdentifier>{431f5220-76b0-496e-8539-85e5777180d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -48,6 +54,18 @@
     <ClInclude Include="Transform.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="divsufsort\config.h">
+      <Filter>头文件\1</Filter>
+    </ClInclude>
+    <ClInclude Include="divsufsort\divsufsort.h">
+      <Filter>头文件\1</Filter>
+    </ClInclude>
+    <ClInclude Include="divsufsort\divsufsort_private.h">
+      <Filter>头文件\1</Filter>
+    </ClInclude>
+    <ClInclude Include="divsufsort\divsufsort64.h">
+      <Filter>头文件\1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -79,6 +97,18 @@
     </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="divsufsort\sssort.c">
+      <Filter>源文件\c</Filter>
+    </ClCompile>
+    <ClCompile Include="divsufsort\trsort.c">
+      <Filter>源文件\c</Filter>
+    </ClCompile>
+    <ClCompile Include="divsufsort\utils.c">
+      <Filter>源文件\c</Filter>
+    </ClCompile>
+    <ClCompile Include="divsufsort\divsufsort.c">
+      <Filter>源文件\c</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

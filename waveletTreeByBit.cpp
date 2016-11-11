@@ -27,7 +27,7 @@ void waveletTreeByBit::computerLF(int* C, unsigned char* L, unsigned* LF, int le
 //	LF[start] = 0;
 	for (i = 0; i < length; i++)
 	{
-		int temp = (i - 1>=0) ? (i - 1) : (i + 1024 - 1);
+		int temp = (i - 1 >= 0) ? (i - 1) : (i + length - 1);
 		LF[RA[i]] = RA[temp];
 		//ATLTRACE("i = %d,C[L[i]] = %d, Rank(L[i], i)) = %d\n",i, C[L[i]], Rank(L[i], i));
 		//LF[i] = (C[L[i]] + Rank(L[i], i-1)) % length;

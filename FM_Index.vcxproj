@@ -80,6 +80,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaisOperate.h" />
+    <ClInclude Include="divsufsort\config.h" />
+    <ClInclude Include="divsufsort\divsufsort.h" />
+    <ClInclude Include="divsufsort\divsufsort64.h" />
+    <ClInclude Include="divsufsort\divsufsort_private.h" />
     <ClInclude Include="GAMACode.h" />
     <ClInclude Include="GamaCompressData.h" />
     <ClInclude Include="stdafx.h" />
@@ -92,6 +96,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaisOperate.cpp" />
+    <ClCompile Include="divsufsort\divsufsort.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="divsufsort\sssort.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="divsufsort\trsort.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="divsufsort\utils.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="FM_Index.cpp" />
     <ClCompile Include="GAMACode.cpp" />
     <ClCompile Include="GamaCompressData.cpp" />

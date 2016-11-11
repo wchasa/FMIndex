@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Transform.h"
-
+#include "divsufsort//divsufsort.h"
 
 Transform::Transform()
 {
@@ -59,13 +59,14 @@ void Transform::constructC(unsigned char* T, int* CTable, int length)
 	}
 }
 
-int Transform::constructBWT(unsigned char* T, unsigned char* L, int length, int* sa )
+int Transform::constructBWT(unsigned char* T, unsigned char* L, unsigned int length, int* sa)
 {
 	//	int pos = 0;
 	int posofend = 0;
 	if (sa==nullptr)
 	  sa = new int[length];
-	da(T, sa, length, 256);
+	//da(T, sa, length, 256);
+	divsufsort(T, sa, length);
 	for (int i = 0; i < length; i++)
 	{
 		//L[i] = T[(sa[i] - 1<0 ? sa[i] - 1 + length : sa[i] - 1) % length];

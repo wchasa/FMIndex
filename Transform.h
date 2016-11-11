@@ -12,7 +12,7 @@ public:
 	static int cmp(int* r, int a, int b, int l);
 	static void da(unsigned char* r, int* sa, int n, int m);
 	static void constructC(unsigned char* T, int* CTable, int length);
-	static int constructBWT(unsigned char* T, unsigned char* L, int length, int* sa = nullptr);
+	static int constructBWT(unsigned char* T, unsigned char* L, unsigned length, int* sa = nullptr);
 //	static int constructBWT(unsigned char* T, unsigned char* L, int length);
 	static void ReconstructT(unsigned char* L, int* LF, int I, unsigned char* T, int length);
 //	static unsigned char access(waveletTreeByBit& tree, int pos, vector<unsigned char> alphbetVector);

@@ -7,7 +7,7 @@
 #include <algorithm>  
 #include "Transform.h"
 using namespace std;
-#define SIZE 1024
+#define SIZE 1024*1024*1
 int main9()
 {
 	CString str;
@@ -17,6 +17,7 @@ int main9()
 	int length = 21;
 	int ii = 0;
 	tree->proccessForCounstructWaveletTree(T, length);
+
 	for (ii = 2; ii < length; ii++)
 	{
 		if (tree->SA[ii] != tree->getpos2(ii))
@@ -26,13 +27,15 @@ int main9()
 }
 int _tmain(int argc, _TCHAR* argv[])
 {
+	time_t end , start;
+	double duration;
 	CString str;
 	waveletTreeByBit* tree = new waveletTreeByBit();
 	unsigned char* alphbetList = new unsigned char[256];
 	FILE* fp;
-	//const char* strpath = "E:\\测试数据\\测试数据\\normal\\mybook1";
+	const char* strpath = "E:\\测试数据\\测试数据\\normal\\dna";
    //const char* strpath = "J:\\测试数据\\small\\book1";
-	const char* strpath = "J:\\测试数据\\normal\\dna";
+	//const char* strpath = "J:\\测试数据\\normal\\dna";
 	errno_t err;
 	if (fopen_s(&fp, strpath, "r"))
 	{
@@ -47,27 +50,31 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	long count = fread(list, sizeof(char), size, fp);
 	str = list;
-	auto strpatten = _T("AA");
+	auto strpatten = _T("AAA");
 	int ipos = str.Find(strpatten);
 	vector<int> strvector;
 	printf("using string\n");
-	while (ipos!=-1)
-	{
-		printf("pos=%d,", ipos);
-		strvector.push_back(ipos);
-		ipos = str.Find(strpatten, ipos + 1);
-	}
+	//while (ipos!=-1)
+	//{
+	//	printf("pos=%d,", ipos);
+	//	strvector.push_back(ipos);
+	//	ipos = str.Find(strpatten, ipos + 1);
+	//}
+	start = clock();
 	tree->proccessForCounstructWaveletTree(list, count);
+	end = clock();
+	duration = static_cast<double>(end - start) / CLOCKS_PER_SEC;
+	printf("durationOF constructC %f\n", duration);
 	int ii = 0;
 	int pos = 0;
-	tuple<int, int> postuple = tree->count("AA");
-	printf(" \n");
+	tuple<int, int> postuple = tree->count("AAA");
+	/*printf(" \n");
 	for (ii = 54; ii < count; ii++)
 	{
 		if (tree->SA[ii]!=tree->getpos2(ii))
 			printf("wrong pos=%d\n", ii);
 	}
-	printf(" \n");
+	printf(" \n");*/
 	//for (int i2 = 0; i2 < 100; i2++)
 	//{
 	//	printf("i=%d,sa = %d,LF=%d", i2, tree->SA[i2], tree->LF[i2]);
@@ -76,18 +83,18 @@ int _tmain(int argc, _TCHAR* argv[])
 	//	printf(" \n");
 	//}
 	//auto iii = tree->getpos2(2);
-	if (get<0>(postuple) != -1)
-	{
-		auto i = tree->locate(postuple);
-		//printf("bug = %c", get<0>(postuple), get<1>(postuple));
-		printf("\nl=%d,r=%d\n", get<0>(postuple), get<1>(postuple));
-		sort(i.begin(), i.end());
-		printf("using wavelet\n");
-		for (int i1 = 0; i1 < i.size(); i1++)
-			printf("pos=%d,", i[i1]);
-			/*if (i[i1] != strvector[i1])
-				printf("pos=%d,", i1);*/
-	}
+	//if (get<0>(postuple) != -1)
+	//{
+	//	auto i = tree->locate(postuple);
+	//	//printf("bug = %c", get<0>(postuple), get<1>(postuple));
+	//	printf("\nl=%d,r=%d\n", get<0>(postuple), get<1>(postuple));
+	//	sort(i.begin(), i.end());
+	//	printf("using wavelet\n");
+	//	for (int i1 = 0; i1 < i.size(); i1++)
+	//		//printf("pos=%d,", i[i1]);
+	//		if (i[i1] != strvector[i1])
+	//			printf("pos=%d,", i1);
+	//}
 }
 int _tmain33(int argc, _TCHAR* argv[])
 {
